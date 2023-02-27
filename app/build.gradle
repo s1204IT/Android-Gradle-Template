@@ -1,0 +1,27 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'android.sample'
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        // If targetSdk is 30 or later, removing metadata and "SignApk" cannot be used.
+        //noinspection ExpiredTargetSdkVersion
+        targetSdk 29
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+        }
+        debug {
+            minifyEnabled true
+        }
+    }
+
+}
