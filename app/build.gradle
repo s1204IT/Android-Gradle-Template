@@ -3,25 +3,38 @@ plugins {
 }
 
 android {
-    namespace 'android.sample'
     compileSdk 33
 
     defaultConfig {
-        minSdk 21
-        // If targetSdk is 30 or later, removing metadata and "SignApk" cannot be used.
-        //noinspection ExpiredTargetSdkVersion
-        targetSdk 29
+        applicationId 'android.sample'
+        minSdk 24
+        targetSdk 33
         versionCode 1
         versionName "1.0.0"
     }
 
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled true
-        }
-        debug {
-            minifyEnabled true
+            storeFile file('release.jks')
+            storePassword System.getenv('STORE_PASSWORD')
+            keyAlias System.getenv('KEY_ALIAS')
+            keyPassword System.getenv('KEY_PASSWORD')
         }
     }
 
+    buildTypes {
+        debug {
+            debuggable false
+            if (file('release.jks').exists()) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled true
+        }
+        release {
+            if (file('release.jks').exists()) {
+                signingConfig signingConfigs.release
+            }
+            minifyEnabled true
+        }
+    }
 }
