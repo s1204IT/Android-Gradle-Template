@@ -5,18 +5,6 @@
     <application
         android:icon="@android:mipmap/sym_def_app_icon"
         android:label="Sample Project"
-        android:theme="@android:style/Theme.DeviceDefault">
-
-        <activity
-            android:name=".Activity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-    </application>
+        android:theme="@android:style/Theme.DeviceDefault" />
 
 </manifest>
