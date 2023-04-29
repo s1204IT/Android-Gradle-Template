@@ -28,6 +28,10 @@ android {
             if (file('release.jks').exists()) {
                 signingConfig signingConfigs.release
             }
+            minifyEnabled true
+        }
+        release {
+            minifyEnabled true
         }
     }
 }
