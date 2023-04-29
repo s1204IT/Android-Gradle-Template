@@ -29,7 +29,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '11'
-          cache: 'gradle'
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches/
+            ~/.gradle/wrapper/dists/
+            .gradle/
+          key: ${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+
 
       - name: Build with Gradle
         run: | 
@@ -43,21 +52,10 @@ jobs:
             export KEY_ALIAS="android"
             export KEY_PASSWORD="android"
           fi
-          ./gradlew assembleRelease -q
-          echo "version=$(grep versionName ./app/build.gradle | awk '{print $2}' | tr -d \")" >> $GITHUB_ENV
-          echo "commit=$(echo ${{ github.sha }} | cut -c 1-7)" >> $GITHUB_ENV
+          ./gradlew assemble
 
-      - name: Upload built APKs
+      - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: SampleProject(v${{ env.version }}@${{ env.commit }})
-          path: app/build/outputs/apk/release/app-release*.apk
-
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        if: github.event.inputs.release == 'true'
-        with:
-          tag_name: v${{ env.version }}
-          draft: true
-          prerelease: false
-          files: app/build/outputs/apk/release/app-release*.apk
+          name: Stub-APK
+          path: app/build/outputs/apk/**/app-*.apk

@@ -28,17 +28,6 @@ android {
             if (file('release.jks').exists()) {
                 signingConfig signingConfigs.release
             }
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        release {
-            if (file('release.jks').exists()) {
-                signingConfig signingConfigs.release
-            }
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
