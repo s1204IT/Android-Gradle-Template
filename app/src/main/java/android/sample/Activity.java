@@ -1,10 +1,8 @@
 package android.sample;
 
-import android.os.Bundle;
-
 public class Activity extends android.app.Activity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         finishAndRemoveTask();
     }
