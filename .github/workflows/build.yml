@@ -4,16 +4,10 @@ on:
   push:
     paths:
       - '.github/workflows/build.yml'
-      - 'app/**'
+      - 'stub/**'
       - 'gradle/wrapper/gradle-wrapper.properties'
       - '*.gradle'
   workflow_dispatch:
-    inputs:
-      release:
-        description: 'Release'
-        type: boolean
-        required: true
-        default: false
 
 jobs:
   build:
@@ -39,11 +33,10 @@ jobs:
             .gradle/
           key: ${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
-
       - name: Build with Gradle
         run: | 
           if [[ -n "${{ secrets.STORE_FILE }}" ]] && [[ -n "${{ secrets.STORE_PASSWORD }}" ]] && [[ -n "${{ secrets.KEY_ALIAS }}" ]] && [[ -n "${{ secrets.KEY_PASSWORD }}" ]]; then
-            echo "${{ secrets.STORE_FILE }}" | base64 -d > app/release.jks
+            echo "${{ secrets.STORE_FILE }}" | base64 -d > stub/release.jks
             export STORE_PASSWORD="${{ secrets.STORE_PASSWORD }}"
             export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
             export KEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
@@ -58,4 +51,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Stub-APK
-          path: app/build/outputs/apk/**/app-*.apk
+          path: stub/build/outputs/apk/**/stub-*.apk

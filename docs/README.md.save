@@ -1,0 +1,38 @@
+# Android Gradle サンプルプロジェクト
+[![Build](https://github.com/s1204IT/Android-Gradle-Template/actions/workflows/build.yml/badge.svg)](https://github.com/s1204IT/Android-Gradle-Template/actions/workflows/build.yml)
+
+## ビルド
+基本は Actions から行ってください｡
+
+既定のパッケージ名は \[**android.sample**\] です｡  
+`manifest:package` から変更出来ます｡
+
+### 変数一覧
+全て **Secrets** です
+- **STORE_FILE**
+  - キーストアのファイルを Base64 でエンコードした文字列
+- **STORE_PASSWORD**
+  - キーストアのパスワード
+- **KEY_ALIAS**
+  - 署名の名前
+- **KEY_PASSWORD**
+  - 署名のパスワード
+
+## 使用例
+システムアプリの埋め込みに使用します。  
+署名だけ合わせて後からアップデートの形で上書きします。  
+
+Gradleを用いるメリットは､ `META-INF/` を作成させないポイントです。
+  - minSdk が **24** 以上である必要が有ります。
+
+もっと極限までサイズを抑えたい場合は､ AAPTを使用してください｡  
+このリポジトリはGradleでの再現です｡
+
+### オプション設定
+アプリ名を設定したい場合は､ マニフェストの `application`.`android:label` を設定してください｡  
+アイコンは stub/src/main/**res/drawable-nodpi/** に PNG形式でファイルを入れ､ マニフェストの `application`.`android:icon` を `@drawable/FILENAME` に設定してください｡
+
+## ファイル
+- app-**debug**.apk : Signed TestKey
+  - **※** 環境変数を設定して好きなキーストアを使用することが出来ます｡
+- app-**release**.apk : Un-signed
