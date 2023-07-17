@@ -6,3 +6,8 @@
 /.idea/
 # Gradle Build
 /app/build/
+/stub/build/
+# KeyStore
+*.jks
+*.ks
+*.keystore

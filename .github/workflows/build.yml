@@ -7,12 +7,13 @@ on:
       - 'stub/**'
       - 'gradle/wrapper/gradle-wrapper.properties'
       - '*.gradle'
+      - 'gradle.properties'
   workflow_dispatch:
 
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
 
       - name: Checkout
@@ -30,13 +31,12 @@ jobs:
           path: |
             ~/.gradle/caches/
             ~/.gradle/wrapper/dists/
-            .gradle/
           key: ${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
       - name: Build with Gradle
-        run: | 
+        run: |
           if [[ -n "${{ secrets.STORE_FILE }}" ]] && [[ -n "${{ secrets.STORE_PASSWORD }}" ]] && [[ -n "${{ secrets.KEY_ALIAS }}" ]] && [[ -n "${{ secrets.KEY_PASSWORD }}" ]]; then
-            echo "${{ secrets.STORE_FILE }}" | base64 -d > stub/release.jks
+            echo "${{ secrets.STORE_FILE }}" | base64 -d > release.jks
             export STORE_PASSWORD="${{ secrets.STORE_PASSWORD }}"
             export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
             export KEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
@@ -46,9 +46,14 @@ jobs:
             export KEY_PASSWORD="android"
           fi
           ./gradlew assemble
+      - name: Upload Core APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: Core-APK
+          path: app/build/outputs/apk/**/app-*.apk
 
-      - name: Upload
+      - name: Upload Stub APK
         uses: actions/upload-artifact@v3
         with:
           name: Stub-APK
-          path: stub/build/outputs/apk/**/stub-*.apk
+          path: stub/build/outputs/apk/release/stub-release.apk

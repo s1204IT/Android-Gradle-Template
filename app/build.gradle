@@ -6,6 +6,7 @@ android {
     compileSdk 33
 
     defaultConfig {
+        applicationId 'android.sample'
         minSdk 24
         targetSdk 33
         versionCode 1
@@ -14,7 +15,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(../'release.jks')
+            storeFile file('../release.jks')
             storePassword System.getenv('STORE_PASSWORD')
             keyAlias System.getenv('KEY_ALIAS')
             keyPassword System.getenv('KEY_PASSWORD')
@@ -23,7 +24,6 @@ android {
 
     buildTypes {
         debug {
-            debuggable false
             signingConfig signingConfigs.release
             minifyEnabled true
         }
