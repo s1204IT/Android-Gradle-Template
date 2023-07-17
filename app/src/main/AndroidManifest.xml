@@ -2,8 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="android.sample">
     <application
-        android:icon="@android:mipmap/sym_def_app_icon"
-        android:label="Sample Project">
+        >
         <activity
             android:name=".Activity"
             android:exported="true">

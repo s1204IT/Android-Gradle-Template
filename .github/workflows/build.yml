@@ -4,11 +4,43 @@ on:
   push:
     paths:
       - '.github/workflows/build.yml'
+      - 'app/**'
       - 'stub/**'
-      - 'gradle/wrapper/gradle-wrapper.properties'
+      - 'gradle/**'
       - '*.gradle'
       - 'gradle.properties'
   workflow_dispatch:
+    inputs:
+      app_name:
+        type: string
+        description: Core App name
+        required: false
+        default: ""
+      app_versionName:
+        type: string
+        description: Core Version name
+        required: true
+        default: "1.0"
+      app_versionCode:
+        type: string
+        description: Core Version code
+        required: true
+        default: "1"
+      stub_name:
+        type: string
+        description: Stub App name
+        required: false
+        default: ""
+      stub_versionName:
+        type: string
+        description: Stub Version name
+        required: true
+        default: "1.0"
+      stub_versionCode:
+        type: string
+        description: Stub Version code
+        required: true
+        default: "1"
 
 jobs:
   build:
@@ -35,7 +67,7 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          if [[ -n "${{ secrets.STORE_FILE }}" ]] && [[ -n "${{ secrets.STORE_PASSWORD }}" ]] && [[ -n "${{ secrets.KEY_ALIAS }}" ]] && [[ -n "${{ secrets.KEY_PASSWORD }}" ]]; then
+          if [[ -n "${{ secrets.STORE_FILE }}" && -n "${{ secrets.STORE_PASSWORD }}" && -n "${{ secrets.KEY_ALIAS }}" && -n "${{ secrets.KEY_PASSWORD }}" ]]; then
             echo "${{ secrets.STORE_FILE }}" | base64 -d > release.jks
             export STORE_PASSWORD="${{ secrets.STORE_PASSWORD }}"
             export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
@@ -44,6 +76,9 @@ jobs:
             export STORE_PASSWORD="android"
             export KEY_ALIAS="android"
             export KEY_PASSWORD="android"
+          fi
+          if [[ -n "${{ inputs.app_name }}" ]]; then
+            sed -ie "/\<application/i \ \ \ \ \ \ \ \ android\:label\=\"${{ inputs.app_name }}\""
           fi
           ./gradlew assemble
           echo "appVersion=$(grep versionName app/build.gradle | awk '{print $2}' | tr -d \")" >> $GITHUB_ENV
