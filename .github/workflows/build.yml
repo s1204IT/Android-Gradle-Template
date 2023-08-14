@@ -5,7 +5,6 @@ on:
     paths:
       - '.github/workflows/build.yml'
       - 'app/**'
-      - 'stub/**'
       - 'gradle/**'
       - '*.gradle'
       - 'gradle.properties'
@@ -13,32 +12,17 @@ on:
     inputs:
       app_name:
         type: string
-        description: Core App name
+        description: App name
         required: false
         default: ""
       app_versionName:
         type: string
-        description: Core Version name
+        description: Version name
         required: true
         default: "1.0"
       app_versionCode:
         type: string
-        description: Core Version code
-        required: true
-        default: "1"
-      stub_name:
-        type: string
-        description: Stub App name
-        required: false
-        default: ""
-      stub_versionName:
-        type: string
-        description: Stub Version name
-        required: true
-        default: "1.0"
-      stub_versionCode:
-        type: string
-        description: Stub Version code
+        description: Version code
         required: true
         default: "1"
 
@@ -55,20 +39,20 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '8'
 
       - name: Cache
         uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches/
-            ~/.gradle/wrapper/dists/
+            ~/.gradle/wrapper/
           key: ${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
 
       - name: Build with Gradle
         run: |
           if [[ -n "${{ secrets.STORE_FILE }}" && -n "${{ secrets.STORE_PASSWORD }}" && -n "${{ secrets.KEY_ALIAS }}" && -n "${{ secrets.KEY_PASSWORD }}" ]]; then
-            echo "${{ secrets.STORE_FILE }}" | base64 -d > release.jks
+            echo "${{ secrets.STORE_FILE }}" | base64 -d > app/release.jks
             export STORE_PASSWORD="${{ secrets.STORE_PASSWORD }}"
             export KEY_ALIAS="${{ secrets.KEY_ALIAS }}"
             export KEY_PASSWORD="${{ secrets.KEY_PASSWORD }}"
@@ -77,22 +61,18 @@ jobs:
             export KEY_ALIAS="android"
             export KEY_PASSWORD="android"
           fi
-          if [[ -n "${{ inputs.app_name }}" ]]; then
+          if [ "${{ inputs.app_name }}" != "" ]; then
             sed -ie "/\<application/i \ \ \ \ \ \ \ \ android\:label\=\"${{ inputs.app_name }}\"" app/src/main/AndroidManifest.xml
+            echo "package=$(echo {{ inputs.app_name }})" >> $GITHUB_ENV
+          else
+            echo "package=$(grep applicationId app/build.gradle | awk '{print $2}' | tr -d \')" >> $GITHUB_ENV
           fi
+          echo "version=$(grep versionName app/build.gradle | awk '{print $2}' | tr -d \')" >> $GITHUB_ENV
           ./gradlew assemble
-          echo "appVersion=$(grep versionName app/build.gradle | awk '{print $2}' | tr -d \")" >> $GITHUB_ENV
-          echo "stubVersion=$(grep versionName stub/build.gradle | awk '{print $2}' | tr -d \")" >> $GITHUB_ENV
-          echo "commit=$(echo ${{ github.sha }} | cut -c -7)" >> $GITHUB_ENV
+          echo "commit=$(echo ${{ github.sha }} | cut -c-7)" >> $GITHUB_ENV
 
-      - name: Upload Core APK
+      - name: Upload APK
         uses: actions/upload-artifact@v3
         with:
-          name: Core-APK(v${{ env.appVersion }}@${{ env.commit }})
+          name: ${{env.package}}_(v${{ env.version }}@${{ env.commit }})
           path: app/build/outputs/apk/**/app-*.apk
-
-      - name: Upload Stub APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: Stub-APK(v${{ env.stubVersion }}@${{ env.commit }})
-          path: stub/build/outputs/apk/release/stub-release.apk

@@ -10,12 +10,12 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
     }
 
     signingConfigs {
         release {
-            storeFile file('../release.jks')
+            storeFile file('release.jks')
             storePassword System.getenv('STORE_PASSWORD')
             keyAlias System.getenv('KEY_ALIAS')
             keyPassword System.getenv('KEY_PASSWORD')

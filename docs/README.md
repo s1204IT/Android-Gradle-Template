@@ -36,3 +36,10 @@ Gradleを用いるメリットは､ `META-INF/` を作成させないポイン�
 - app-**debug**.apk : Signed TestKey
   - **※** 環境変数を設定して好きなキーストアを使用することが出来ます｡
 - app-**release**.apk : Un-signed
+
+---
+
+### Stub APK の作成
+
+こちらをご利用ください｡  
+[**Android-Stub-APK-Maker**](https://github.com/s1204IT/Android-Stub-APK-Maker "s1204IT/Android-Stub-APK-Maker")
