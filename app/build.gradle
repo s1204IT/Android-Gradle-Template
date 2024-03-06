@@ -3,17 +3,24 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    namespace 'android.sample'
+    compileSdk 34
 
     defaultConfig {
-        applicationId 'android.sample'
-        minSdk 24
-        targetSdk 33
+        minSdk 26
+        targetSdk 34
         versionCode 1
-        versionName '1.0'
+        versionName "1.0"
+        proguardFiles += 'proguard-rules.pro'
     }
 
     signingConfigs {
+    android {
+            storeFile file('android.jks')
+            storePassword 'android'
+            keyAlias 'android'
+            keyPassword 'android'
+        }
         release {
             storeFile file('release.jks')
             storePassword System.getenv('STORE_PASSWORD')
@@ -24,12 +31,16 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.release
-            minifyEnabled true
+            minifyEnabled false
+            signingConfig signingConfigs.android
         }
         release {
-            signingConfig signingConfigs.release
             minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.android
+            if (file('release.jks').exists()) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 

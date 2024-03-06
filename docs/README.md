@@ -2,15 +2,45 @@
 [![Build](https://github.com/s1204IT/Android-Gradle-Template/actions/workflows/build.yml/badge.svg)](https://github.com/s1204IT/Android-Gradle-Template/actions/workflows/build.yml)
 
 ## ビルド
-基本は Actions から行ってください｡
+基本は Actions から行う様に設計しています。
 
-既定のパッケージ名は \[**android.sample**\] です｡  
-`manifest:package` から変更出来ます｡
+このリポジトリをクローンし、この README とマニフェスト等のビルドに関するファイルを修正した後、新たなリポジトリに Initial Commit をしてください。  
+ライセンスは載せていないので、@s1204IT のペアコミットやクレジットの記載は不要です。
 
-### 変数一覧
+下準備
+```bash
+git clone git@github.com:s1204IT/Android-Gradle-Template --de 1
+cd Android-Gradle-Template
+rm -rf .git docs/
+```
+
+移行 (master ブランチの場合)
+```bash
+git init
+git branch -M master
+git remote add origin git@github.com:user/repo
+git add -A
+git commit -m "Initial Commit"
+git push -u origin master
+```
+
+## カスタム
+このプロジェクトの構成ではAPKがインストール出来るだけのアプリとなっています。  
+少なくとも以下の構成を編集する必要があります。  
+- パッケージID
+  - `app/build.gradle` の `android.namespace`
+  - `app/src/main/java/` 以下のディレクトリ
+- アプリ名
+  - `settings.gradle` の `rootProject.name`
+  - マニフェスト(後述)の `application` タグ内の `android.label`
+
+その他アイコン等。  
+AndroidManifest については、 [公式ブログ](https://developer.android.com/guide/topics/manifest/manifest-intro?hl=ja "アプリ マニフェストの概要  |  Android Developers")等に詳細が載っているので調べて見てください。
+
+## 変数一覧
 全て **Secrets** です
 - **STORE_FILE**
-  - キーストアのファイルを Base64 でエンコードした文字列
+  - JKS形式のキーストアファイルを Base64 でエンコードした文字列
 - **STORE_PASSWORD**
   - キーストアのパスワード
 - **KEY_ALIAS**
@@ -18,24 +48,9 @@
 - **KEY_PASSWORD**
   - 署名のパスワード
 
-## 使用例
-システムアプリの埋め込みに使用します。  
-署名だけ合わせて後からアップデートの形で上書きします。  
-
-Gradleを用いるメリットは､ `META-INF/` を作成させないポイントです。
-  - minSdk が **24** 以上である必要が有ります。
-
-もっと極限までサイズを抑えたい場合は､ AAPTを使用してください｡  
-このリポジトリはGradleでの再現です｡
-
-### オプション設定
-アプリ名を設定したい場合は､ マニフェストの `application`.`android:label` を設定してください｡  
-アイコンは app/src/main/**res/drawable-nodpi/** に PNG形式でファイルを入れ､ マニフェストの `application`.`android:icon` を `@drawable/FILENAME` に設定してください｡
-
 ## ファイル
-- app-**debug**.apk : Signed TestKey
-  - **※** 環境変数を設定して好きなキーストアを使用することが出来ます｡
-- app-**release**.apk : Un-signed
+- app-**debug**.apk : testkey
+- app-**release**.apk : Self-signed
 
 ---
 
