@@ -3,45 +3,51 @@ plugins {
 }
 
 android {
-    namespace 'android.sample'
-    compileSdk 34
+    namespace = 'com.android.sample'
+    compileSdk = 35
 
     defaultConfig {
-        minSdk 26
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
         proguardFiles += 'proguard-rules.pro'
+        multiDexEnabled = false
     }
 
     signingConfigs {
-    android {
+        android {
             storeFile file('android.jks')
             storePassword 'android'
             keyAlias 'android'
             keyPassword 'android'
         }
-        release {
-            storeFile file('release.jks')
-            storePassword System.getenv('STORE_PASSWORD')
-            keyAlias System.getenv('KEY_ALIAS')
-            keyPassword System.getenv('KEY_PASSWORD')
-        }
     }
 
     buildTypes {
-        debug {
-            minifyEnabled false
-            signingConfig signingConfigs.android
+        configureEach {
+            signingConfig = signingConfigs.android
         }
         release {
-            minifyEnabled true
-            shrinkResources true
-            signingConfig signingConfigs.android
-            if (file('release.jks').exists()) {
-                signingConfig signingConfigs.release
-            }
+            minifyEnabled = true
+            shrinkResources = true
         }
     }
 
+    bundle {
+        language {
+            enableSplit = true
+         }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
+    }
 }

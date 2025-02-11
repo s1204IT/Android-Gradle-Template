@@ -37,21 +37,6 @@ git push -u origin master
 その他アイコン等。  
 AndroidManifest については、 [公式ブログ](https://developer.android.com/guide/topics/manifest/manifest-intro?hl=ja "アプリ マニフェストの概要  |  Android Developers")等に詳細が載っているので調べて見てください。
 
-## 変数一覧
-全て **Secrets** です
-- **STORE_FILE**
-  - JKS形式のキーストアファイルを Base64 でエンコードした文字列
-- **STORE_PASSWORD**
-  - キーストアのパスワード
-- **KEY_ALIAS**
-  - 署名の名前
-- **KEY_PASSWORD**
-  - 署名のパスワード
-
-## ファイル
-- app-**debug**.apk : testkey
-- app-**release**.apk : Self-signed
-
 ---
 
 ### Stub APK の作成
